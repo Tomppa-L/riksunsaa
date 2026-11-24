@@ -21,14 +21,14 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="./style.css?v=3">
+<link rel="stylesheet" href="./style.css?v=4">
 </head>
 <body>
 <div class="app">
 
   <header class="top">
     <div>
-      <h1 class="logo">Tomppa – Riksun <span>Sää</span></h1>
+      <h1 id="logo" class="logo">Tomppa – Riksun <span>Sää</span></h1>
       <p class="sub"><span id="place">Riihimäki</span> · <span id="updated">haetaan…</span></p>
     </div>
     <div class="btns">
@@ -101,9 +101,9 @@
         <div class="cardhead"><h2>Sadetutka</h2></div>
         <p class="muted">Katso, missä sataa juuri nyt ja mihin sadealueet ovat liikkumassa.</p>
         <div class="radarlinks">
-          <a class="radarlink" href="https://www.ilmatieteenlaitos.fi/sade-ja-pilvialueet?area=etela-suomi" target="_blank" rel="noopener">
+          <a id="radarFmi" class="radarlink" href="https://www.ilmatieteenlaitos.fi/sade-ja-pilvialueet?area=etela-suomi" target="_blank" rel="noopener">
             <strong>Ilmatieteen laitos <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6"/><path d="M20 4l-9 9"/><path d="M19 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h5"/></svg></strong>
-            <span>Etelä-Suomen tutka ja animaatio</span>
+            <span>Tutkakuva ja animaatio</span>
           </a>
           <a class="radarlink" href="https://www.sataako.fi/" target="_blank" rel="noopener">
             <strong>Sataako.fi <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6"/><path d="M20 4l-9 9"/><path d="M19 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h5"/></svg></strong>
@@ -118,6 +118,6 @@
     <p>Lähde: <a href="https://www.ilmatieteenlaitos.fi/avoin-data" target="_blank" rel="noopener">Ilmatieteen laitos, avoin data</a> (CC BY 4.0)</p>
   </footer>
 </div>
-<script src="./app.js?v=3"></script>
+<script src="./app.js?v=4"></script>
 </body>
 </html>

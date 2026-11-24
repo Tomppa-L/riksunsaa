@@ -1,9 +1,31 @@
-// Tomppa – Riksun Sää
+// Kaupunkikohtainen sääsovellus.
 // Data: Ilmatieteen laitos, avoin data (CC BY 4.0). Ei riippuvuuksia, ei build-vaihetta.
 'use strict';
 
-const PLACE = 'Riihimäki';
-const LATLON = '60.7377,24.7773';
+// =====================================================================
+//  OMAT ASETUKSET – muuta nämä, niin saat oman kaupunkisi sääsovelluksen.
+//  Ohje: README.md, kohta "Tee oman kaupunkisi sääsovellus".
+// =====================================================================
+const CONFIG = {
+  // Sovelluksen nimi. Viimeinen sana näytetään korostusvärillä.
+  appName: 'Tomppa – Riksun Sää',
+  // Paikkakunta Ilmatieteen laitoksen haussa (kunnan tai kaupunginosan nimi).
+  place: 'Riihimäki',
+  // Sama paikkakunta "missä"-muodossa: Riihimäellä, Äänekoskella, Helsingissä ...
+  placeIn: 'Riihimäellä',
+  // Koordinaatit: leveysaste,pituusaste (esim. Google Mapsista oikealla hiirennapilla).
+  latlon: '60.7377,24.7773',
+  // Säävaroitusten alueet pienillä kirjaimilla: kunta ja maakunta.
+  warningAreas: ['riihimäki', 'kanta-häme'],
+  // Sadetutkan linkki Ilmatieteen laitokselle. Avaa ilmatieteenlaitos.fi > Sade- ja pilvialueet,
+  // valitse oma alueesi ja kopioi selaimen osoiterivi tähän.
+  radarUrl: 'https://www.ilmatieteenlaitos.fi/sade-ja-pilvialueet?area=etela-suomi',
+};
+// =====================================================================
+
+const PLACE = CONFIG.place;
+const LATLON = CONFIG.latlon;
+const [LAT, LON] = LATLON.split(',').map(Number);
 const WFS = 'https://opendata.fmi.fi/wfs';
 const REFRESH_MIN = 15;
 
@@ -103,9 +125,22 @@ function symbol(code) {
   else if (c >= 91) kind = 'fog';
   return { kind, text: TEXTS[c] || '' };
 }
-// Karkea valoisan ajan arvio Riihimäelle kuukausittain (auringonnousu, -lasku tunteina).
-const DAYLIGHT = [[9, 15], [8, 17], [7, 18], [6, 20], [5, 21], [4, 22], [4, 22], [5, 21], [7, 19], [8, 17], [9, 15], [9, 15]];
-const isNight = (d) => { const [a, b] = DAYLIGHT[d.getMonth()]; const h = d.getHours(); return h < a || h >= b; };
+// Auringon korkeus paikkakunnan koordinaateissa: yöllä näytetään kuu.
+// Toimii koko Suomessa, myös kaamoksessa ja yöttömän yön aikaan.
+function sunElevation(date, lat, lon) {
+  const r = Math.PI / 180;
+  const d = (date.getTime() - Date.UTC(2000, 0, 1, 12)) / 864e5;
+  const g = (357.529 + 0.98560028 * d) * r;
+  const q = 280.459 + 0.98564736 * d;
+  const L = (q + 1.915 * Math.sin(g) + 0.02 * Math.sin(2 * g)) * r;
+  const e = (23.439 - 0.00000036 * d) * r;
+  const ra = Math.atan2(Math.cos(e) * Math.sin(L), Math.cos(L));
+  const dec = Math.asin(Math.sin(e) * Math.sin(L));
+  const gmst = (18.697374558 + 24.06570982441908 * d) % 24;
+  const ha = (gmst * 15 + lon) * r - ra;
+  return Math.asin(Math.sin(lat * r) * Math.sin(dec) + Math.cos(lat * r) * Math.cos(dec) * Math.cos(ha)) / r;
+}
+const isNight = (d) => sunElevation(d, LAT, LON) < -0.83;
 
 const CLOUD_HI = 'M7 14h10a3.5 3.5 0 0 0 .5-6.96A5.2 5.2 0 0 0 7.3 6.4 3.8 3.8 0 0 0 7 14z';
 const CLOUD = 'M7 18h10a4 4 0 0 0 .6-7.95A6 6 0 0 0 6.1 9.2 4.5 4.5 0 0 0 7 18z';
@@ -223,8 +258,7 @@ function renderDaily(fc) {
 // joten GitHub Actions hakee sen puolen tunnin välein sivuston omaksi tiedostoksi.
 const CAP_FEEDS = ['./warnings.xml', 'https://alerts.fmi.fi/cap/feed/atom_fi-FI.xml'];
 const CAP_NS = 'urn:oasis:names:tc:emergency:cap:1.2';
-const [LAT, LON] = LATLON.split(',').map(Number);
-const AREA_WORDS = ['riihimäki', 'kanta-häme'];
+const AREA_WORDS = CONFIG.warningAreas.map((w) => w.toLowerCase());
 const capText = (el, tag) => { const x = el.getElementsByTagNameNS(CAP_NS, tag)[0]; return x ? x.textContent.trim() : ''; };
 
 function pointInPolygon(lat, lon, polyText) {
@@ -289,11 +323,21 @@ function renderWarnings(list) {
   if (list === null) {
     el.innerHTML = `<a class="warn none" href="${WARN_URL}" target="_blank" rel="noopener">${WARN_ICON}<div><p class="warn-title">Säävaroitukset Ilmatieteen laitokselta</p></div></a>`;
   } else if (!list.length) {
-    el.innerHTML = `<a class="warn none" href="${WARN_URL}" target="_blank" rel="noopener">${OK_ICON}<div><p class="warn-title">Ei voimassa olevia säävaroituksia Riihimäellä</p></div></a>`;
+    el.innerHTML = `<a class="warn none" href="${WARN_URL}" target="_blank" rel="noopener">${OK_ICON}<div><p class="warn-title">Ei voimassa olevia säävaroituksia ${esc(CONFIG.placeIn)}</p></div></a>`;
   } else {
     el.innerHTML = list.map((w) => `<a class="warn ${w.level}" href="${WARN_URL}" target="_blank" rel="noopener">${WARN_ICON}<div><p class="warn-title">${esc(w.headline)}</p>${w.description ? `<p class="warn-text">${esc(w.description)}</p>` : ''}</div></a>`).join('');
   }
 }
+
+// ---------- nimi ja paikkakunta asetuksista ----------
+(function applyConfig() {
+  const words = CONFIG.appName.trim().split(' ');
+  const last = words.pop();
+  $('logo').innerHTML = `${esc(words.join(' '))} <span>${esc(last)}</span>`;
+  document.title = CONFIG.appName;
+  $('place').textContent = CONFIG.place;
+  $('radarFmi').href = CONFIG.radarUrl;
+})();
 
 // ---------- teema ----------
 function setTheme(t) {
