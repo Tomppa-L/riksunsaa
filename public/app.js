@@ -107,31 +107,31 @@ function symbol(code) {
 const DAYLIGHT = [[9, 15], [8, 17], [7, 18], [6, 20], [5, 21], [4, 22], [4, 22], [5, 21], [7, 19], [8, 17], [9, 15], [9, 15]];
 const isNight = (d) => { const [a, b] = DAYLIGHT[d.getMonth()]; const h = d.getHours(); return h < a || h >= b; };
 
-const BLUE = '#2B5C8A', SUN = '#C2620F', MOON = '#5A6B8C';
 const CLOUD_HI = 'M7 14h10a3.5 3.5 0 0 0 .5-6.96A5.2 5.2 0 0 0 7.3 6.4 3.8 3.8 0 0 0 7 14z';
 const CLOUD = 'M7 18h10a4 4 0 0 0 .6-7.95A6 6 0 0 0 6.1 9.2 4.5 4.5 0 0 0 7 18z';
+// Värit tulevat CSS:stä (.wx), joten kuvakkeet toimivat sekä vaaleassa että tummassa teemassa.
 function icon(kind, night, label) {
-  const a = `role="img" aria-label="${label || ''}" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"`;
+  const a = `class="wx" role="img" aria-label="${label || ''}" viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"`;
   const sun = `<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>`;
   const moon = `<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>`;
-  const dots = `<circle cx="8" cy="18" r="1" fill="${BLUE}"/><circle cx="12" cy="20" r="1" fill="${BLUE}"/><circle cx="16" cy="18" r="1" fill="${BLUE}"/>`;
+  const dots = `<circle class="dot" cx="8" cy="18" r="1"/><circle class="dot" cx="12" cy="20" r="1"/><circle class="dot" cx="16" cy="18" r="1"/>`;
   const drops = `<path d="M8 17l-1 3M12 17l-1 3M16 17l-1 3"/>`;
   switch (kind) {
-    case 'sun': return night ? `<svg ${a} stroke="${MOON}">${moon}</svg>` : `<svg ${a} stroke="${SUN}">${sun}</svg>`;
-    case 'partly': return `<svg ${a}><g stroke="${night ? MOON : SUN}" transform="translate(-3 -4) scale(.75)">${night ? moon : sun}</g><path stroke="${BLUE}" fill="#fff" d="M9 20h8.5a3.5 3.5 0 0 0 .4-6.98A5 5 0 0 0 9.2 12.3 3.9 3.9 0 0 0 9 20z"/></svg>`;
-    case 'rain': case 'showers': return `<svg ${a} stroke="${BLUE}"><path d="${CLOUD_HI}"/>${drops}</svg>`;
-    case 'snow': return `<svg ${a} stroke="${BLUE}"><path d="${CLOUD_HI}"/>${dots}</svg>`;
-    case 'sleet': return `<svg ${a} stroke="${BLUE}"><path d="${CLOUD_HI}"/><path d="M8 17l-1 3M16 17l-1 3"/><circle cx="12" cy="19" r="1" fill="${BLUE}"/></svg>`;
-    case 'thunder': return `<svg ${a} stroke="${BLUE}"><path d="${CLOUD_HI}"/><path stroke="${SUN}" d="M13 15l-2 3h3l-2 4"/></svg>`;
-    case 'fog': return `<svg ${a} stroke="${BLUE}"><path d="M4 9h16M3 13h18M5 17h14"/></svg>`;
-    default: return `<svg ${a} stroke="${BLUE}"><path d="${CLOUD}"/></svg>`;
+    case 'sun': return night ? `<svg ${a}><g class="m">${moon}</g></svg>` : `<svg ${a}><g class="s">${sun}</g></svg>`;
+    case 'partly': return `<svg ${a}><g class="${night ? 'm' : 's'}" transform="translate(-3 -4) scale(.75)">${night ? moon : sun}</g><path class="cf" d="M9 20h8.5a3.5 3.5 0 0 0 .4-6.98A5 5 0 0 0 9.2 12.3 3.9 3.9 0 0 0 9 20z"/></svg>`;
+    case 'rain': case 'showers': return `<svg ${a}><path d="${CLOUD_HI}"/>${drops}</svg>`;
+    case 'snow': return `<svg ${a}><path d="${CLOUD_HI}"/>${dots}</svg>`;
+    case 'sleet': return `<svg ${a}><path d="${CLOUD_HI}"/><path d="M8 17l-1 3M16 17l-1 3"/><circle class="dot" cx="12" cy="19" r="1"/></svg>`;
+    case 'thunder': return `<svg ${a}><path d="${CLOUD_HI}"/><path class="s" d="M13 15l-2 3h3l-2 4"/></svg>`;
+    case 'fog': return `<svg ${a}><path d="M4 9h16M3 13h18M5 17h14"/></svg>`;
+    default: return `<svg ${a}><path d="${CLOUD}"/></svg>`;
   }
 }
 
 // ---------- tuuli ----------
 const DIRS = ['pohjoisesta', 'koillisesta', 'idästä', 'kaakosta', 'etelästä', 'lounaasta', 'lännestä', 'luoteesta'];
 const dirName = (d) => DIRS[Math.round(((d % 360) + 360) % 360 / 45) % 8];
-const arrow = (d) => `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1E3A55" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="transform:rotate(${(d + 180) % 360}deg)" aria-hidden="true"><path d="M12 19V5"/><path d="M6 11l6-6 6 6"/></svg>`;
+const arrow = (d) => `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="transform:rotate(${(d + 180) % 360}deg)" aria-hidden="true"><path d="M12 19V5"/><path d="M6 11l6-6 6 6"/></svg>`;
 function feelsLike(t, v) {
   if (t == null || v == null || t > 10 || v < 1.4) return t;
   const p = Math.pow(v, 0.16);
@@ -183,7 +183,7 @@ function renderHourly(fc) {
   const el = $('hourly');
   el.style.width = hrs.length * W + 'px';
   el.innerHTML = `<div class="hrow">${cells}</div>
-    <svg width="${hrs.length * W}" height="${H}" aria-hidden="true"><polyline points="${pts}" fill="none" stroke="#1E6FD9" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/></svg>
+    <svg width="${hrs.length * W}" height="${H}" aria-hidden="true"><polyline class="curve" points="${pts}" fill="none" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/></svg>
     <div class="prow">${bars}</div>`;
 }
 
@@ -218,6 +218,83 @@ function renderDaily(fc) {
   }).join('');
 }
 
+// ---------- säävaroitukset (Ilmatieteen laitoksen CAP-syöte) ----------
+const CAP_FEED = 'https://alerts.fmi.fi/cap/feed/atom_fi-FI.xml';
+const CAP_NS = 'urn:oasis:names:tc:emergency:cap:1.2';
+const [LAT, LON] = LATLON.split(',').map(Number);
+const AREA_WORDS = ['riihimäki', 'kanta-häme'];
+const capText = (el, tag) => { const x = el.getElementsByTagNameNS(CAP_NS, tag)[0]; return x ? x.textContent.trim() : ''; };
+
+function pointInPolygon(lat, lon, polyText) {
+  const pts = polyText.trim().split(/\s+/).map((p) => p.split(',').map(Number));
+  let inside = false;
+  for (let i = 0, j = pts.length - 1; i < pts.length; j = i++) {
+    const [yi, xi] = pts[i], [yj, xj] = pts[j];
+    if ((yi > lat) !== (yj > lat) && lon < ((xj - xi) * (lat - yi)) / (yj - yi) + xi) inside = !inside;
+  }
+  return inside;
+}
+
+async function getWarnings() {
+  const res = await fetch(CAP_FEED, { cache: 'no-store' });
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  const doc = new DOMParser().parseFromString(await res.text(), 'application/xml');
+  const now = new Date();
+  const seen = new Set();
+  const out = [];
+  for (const alert of doc.getElementsByTagNameNS(CAP_NS, 'alert')) {
+    if (capText(alert, 'msgType') === 'Cancel' || capText(alert, 'status') !== 'Actual') continue;
+    for (const info of alert.getElementsByTagNameNS(CAP_NS, 'info')) {
+      if (!capText(info, 'language').startsWith('fi')) continue;
+      const expires = new Date(capText(info, 'expires'));
+      if (!(expires > now)) continue;
+      let hit = false;
+      for (const area of info.getElementsByTagNameNS(CAP_NS, 'area')) {
+        const desc = capText(area, 'areaDesc').toLowerCase();
+        if (AREA_WORDS.some((w) => desc.includes(w))) hit = true;
+        for (const poly of area.getElementsByTagNameNS(CAP_NS, 'polygon')) if (pointInPolygon(LAT, LON, poly.textContent)) hit = true;
+      }
+      if (!hit) continue;
+      const headline = capText(info, 'headline') || capText(info, 'event');
+      if (seen.has(headline)) continue;
+      seen.add(headline);
+      const sev = capText(info, 'severity');
+      const level = /punainen/i.test(headline) || sev === 'Extreme' ? 'red' : /oranssi/i.test(headline) || sev === 'Severe' ? 'orange' : 'yellow';
+      out.push({ level, headline, description: capText(info, 'description'), onset: new Date(capText(info, 'onset') || capText(info, 'effective')) });
+    }
+  }
+  const order = { red: 0, orange: 1, yellow: 2 };
+  return out.sort((x, y) => order[x.level] - order[y.level] || x.onset - y.onset);
+}
+
+const WARN_ICON = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l10 18H2z"/><path d="M12 10v5"/><path d="M12 18h.01"/></svg>';
+const OK_ICON = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.5 2.5L16 9.5"/></svg>';
+const esc = (t) => t.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const WARN_URL = 'https://www.ilmatieteenlaitos.fi/varoitukset';
+
+function renderWarnings(list) {
+  const el = $('warnings');
+  if (list === null) {
+    el.innerHTML = `<a class="warn none" href="${WARN_URL}" target="_blank" rel="noopener">${WARN_ICON}<div><p class="warn-title">Säävaroitukset Ilmatieteen laitokselta</p></div></a>`;
+  } else if (!list.length) {
+    el.innerHTML = `<a class="warn none" href="${WARN_URL}" target="_blank" rel="noopener">${OK_ICON}<div><p class="warn-title">Ei voimassa olevia säävaroituksia Riihimäellä</p></div></a>`;
+  } else {
+    el.innerHTML = list.map((w) => `<a class="warn ${w.level}" href="${WARN_URL}" target="_blank" rel="noopener">${WARN_ICON}<div><p class="warn-title">${esc(w.headline)}</p>${w.description ? `<p class="warn-text">${esc(w.description)}</p>` : ''}</div></a>`).join('');
+  }
+}
+
+// ---------- teema ----------
+function setTheme(t) {
+  document.documentElement.setAttribute('data-theme', t);
+  document.querySelector('meta[name="theme-color"]').setAttribute('content', t === 'dark' ? '#0D1620' : '#EEF3F8');
+}
+setTheme(document.documentElement.getAttribute('data-theme') || 'light');
+$('theme').addEventListener('click', () => {
+  const t = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  setTheme(t);
+  try { localStorage.setItem('riksu-theme', t); } catch (e) { /* esim. yksityinen selaus */ }
+});
+
 // ---------- päälogiikka ----------
 let busy = false;
 async function load() {
@@ -226,6 +303,7 @@ async function load() {
   $('refresh').classList.add('spin');
   $('error').hidden = true;
   try {
+    getWarnings().then(renderWarnings, () => renderWarnings(null));
     const [fc, obs] = await Promise.all([getForecast(), getObservation()]);
     renderNow(obs, fc);
     renderHourly(fc);
