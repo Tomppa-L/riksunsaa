@@ -1,159 +1,87 @@
-# Snake Demo: Enterprise Cloud-Native Platform & Observability Playground 🚀
+# Tomppa – Riksun Sää
 
-A production-ready, enterprise-grade reference architecture demonstrating advanced SRE practices, GitOps, multi-cloud observability, and automated onboarding workflows.
+Riihimäen sää selaimessa: sää nyt, säävaroitukset, 24 tunnin tuntiennuste lämpötilakäyrineen, 10 vuorokauden ennuste ja pikalinkit sadetutkaan. Vaalea ja tumma teema. Toimii tietokoneella ja puhelimella. Ei riippuvuuksia, ei build-vaihetta.
 
-> ⚠️ **This is a public reference architecture overview.**
-> Full implementation including Helm charts, Ansible playbooks, and operational runbooks is available for review during the interview process.
-> *Source available upon request.*
+**Sovellus:** https://tomppa-l.github.io/riksunsaa/
 
 ---
 
-## 🏗️ Architecture Overview
+## Tee oman kaupunkisi sääsovellus
 
-```
-┌─────────────┐
-│   Browser   │ ← Snake Game (Modern UI)
-└──────┬──────┘
-       │
-┌──────▼──────────┐
-│   Nginx LB      │ ← Load Balancer (least_conn)
-└──────┬──────────┘
-       │
-  ┌────┴────┬─────────┬────────┐
-  │         │         │        │
-┌─▼───┐  ┌──▼───┐ ┌──▼───┐ ┌──▼───┐
-│ALPHA│  │ BETA │ │GAMMA │ │DELTA │ ← 4 Backend Instances
-└──┬──┘  └──┬───┘ └──┬───┘ └──┬───┘
-   │         │        │        │
-   └─────────┴───┬────┴────────┘
-                 │
-        ┌────────▼─────────┐
-        │  OTel Collector  │ ← Telemetry Hub
-        └────────┬─────────┘
-                 │
-        ┌────────▼─────────┐
-        │    Prometheus    │ ← Metrics Storage
-        └────────┬─────────┘
-                 │
-        ┌────────▼─────────┐
-        │  Thanos Sidecar  │ ← Upload to Object Storage
-        └────────┬─────────┘
-                 │
-        ┌────────▼─────────┐
-        │ Object Storage   │ ← MinIO / S3 / GCS / Azure
-        └────────┬─────────┘
-                 │
-        ┌────────▼─────────┐
-        │  Thanos Query    │ ← Unified Query Interface
-        └────────┬─────────┘
-                 │
-        ┌────────▼─────────┐
-        │     Grafana      │ ← Visualization & Dashboards
-        └──────────────────┘
+Tästä saa kuka tahansa tehtyä oman paikkakuntansa sääsovelluksen. Ohjelmointitaitoa ei tarvita: kaikki tehdään GitHubin verkkosivulla, ja muutettavat asiat ovat yhdessä paikassa.
+
+### Saat muuttaa nimen ja kaiken muunkin
+Sovellus on julkaistu **MIT-lisenssillä**. Saat vapaasti kopioida sen, muuttaa sitä, antaa sille oman nimen ja julkaista sen omana sovelluksenasi. Voit esimerkiksi nimetä sen **Jaska – Äänekosken Sää**. Tomppaa ei tarvitse mainita sovelluksessa.
+
+Kaksi asiaa pitää säilyttää:
+1. **`LICENSE`-tiedosto** repossa sellaisenaan. MIT-lisenssi edellyttää, että alkuperäinen tekijänoikeusmerkintä pysyy mukana koodissa.
+2. **Lähdemaininta** sovelluksen alareunassa: *Lähde: Ilmatieteen laitos, avoin data (CC BY 4.0)*. Ilmatieteen laitoksen avoimen datan lisenssi vaatii, että datan lähde kerrotaan.
+
+### 1. Kopioi sovellus omaksesi
+1. Luo GitHub-tunnus osoitteessa https://github.com, jos sinulla ei vielä ole sitä.
+2. Avaa https://github.com/Tomppa-L/riksunsaa ja paina oikealta ylhäältä vihreää **Use this template** → **Create a new repository**.
+3. Kirjoita **Repository name** -kenttään oma nimesi repolle, esim. `aanekoskensaa`. Käytä vain pieniä kirjaimia ilman ääkkösiä ja välilyöntejä, koska nimestä tulee osa sovelluksen osoitetta.
+4. Valitse **Public** ja paina **Create repository**.
+
+### 2. Muuta asetukset
+Avaa omassa repossasi tiedosto **`public/app.js`** ja paina kynäkuvaketta (**Edit this file**). Tiedoston alussa on `OMAT ASETUKSET` -lohko. Muuta sitä, ja jätä muu koodi ennalleen.
+
+Esimerkki Äänekoskelle:
+```js
+const CONFIG = {
+  appName: 'Jaska – Äänekosken Sää',
+  place: 'Äänekoski',
+  placeIn: 'Äänekoskella',
+  latlon: '62.6046,25.7262',
+  warningAreas: ['äänekoski', 'keski-suomi'],
+  radarUrl: 'https://www.ilmatieteenlaitos.fi/sade-ja-pilvialueet',
+};
 ```
 
----
-
-## 🚀 DevSecOps Blueprint
-
----
-
-## 🌟 Core Stack & Architecture
-
-- **Platform & Orchestration:** Kubernetes (K3s/Kind/EKS/AKS), Helm (Dev/Staging/Prod hierarchy), ArgoCD (GitOps)
-- **Observability (SRE-grade):** Prometheus & Thanos (long-term metrics storage & downsampling), Loki (logs), Tempo (distributed traces), OpenTelemetry (auto-instrumentation)
-- **Security & Authentication:** Keycloak (OIDC/OAuth2 centralized SSO), External Secrets / Vault integration, Network Policies
-- **Resiliency & FinOps:** Chaos Mesh (chaos engineering), Kubecost (cost optimization), HPA (Horizontal Pod Autoscaler)
-
----
-
-## 🛡️ DevSecOps Security & Compliance Pipeline
-
-*Automated "Shift-Left" security architecture integrating static analysis, container scanning, AI-driven code reviews, and automated remediation loops:*
-
-```
-Code Push
-    │
-    ▼
-GitHub Actions
-    │
-    ├──► CodeQL AI Scan
-    ├──► Snyk Analysis
-    ├──► Semgrep Scan
-    ├──► Trivy Scan
-    └──► OpenAI Review
-              │
-              ▼
-      Security Dashboard
-              │
-              ▼
-      Critical Issues?
-       ┌──────┴──────┐
-      Yes            No
-       │              │
-       ▼              ▼
-  Block Deploy      Deploy
-       │
-       ▼
-  Auto-Fix PR
-```
-
----
-
-## ⚡ Quick Start
-
-> 🔒 Full source code and Helm charts are available upon request during the interview process.
-
-### Overview of deployment flow
-
-```bash
-# 1. Clone repository (available upon request)
-git clone <source-upon-request>
-cd snake-demo
-
-# 2. Install with Helm (Development Profile)
-helm upgrade --install snake-demo ./helm/snake-demo \
-  --create-namespace \
-  -n snake-demo-dev \
-  -f ./helm/snake-demo/values-dev.yaml
-
-# 3. Access Dashboards
-./scripts/start-dashboards.sh
-```
-
----
-
-## 📚 Documentation & Operations Playbooks
-
-This project emphasizes team collaboration and operational excellence through version-controlled playbooks.
-
-> 🔒 Full documentation is available for review during the interview process.
-
-| Dokumentti | Kuvaus |
+| Asetus | Mitä siihen laitetaan |
 |---|---|
-| 📖 **Full Deployment & Onboarding Plan** | Step-by-step 18-stage guide designed for junior and senior engineers alike |
-| 🛠 **Production Operations Playbook** | Day-2 operations, scaling, rollbacks, and troubleshooting |
-| 🔍 **Advanced Observability Guide** | RUM, tracing, and Thanos configuration |
-| 💥 **Chaos Engineering Guide** | Resilience testing with Chaos Mesh |
-| 💰 **FinOps Guide** | Cost monitoring and optimization |
+| `appName` | Sovelluksen nimi. Viimeinen sana näkyy sinisenä. |
+| `place` | Paikkakunnan nimi Ilmatieteen laitoksen haussa, esim. `Äänekoski`, `Oulu` tai `Helsinki Kallio`. |
+| `placeIn` | Sama paikkakunta *missä*-muodossa: `Äänekoskella`, `Oulussa`, `Kalliossa`. |
+| `latlon` | Paikkakunnan koordinaatit muodossa `leveysaste,pituusaste`. Saat ne Google Mapsista: paina karttaa hiiren oikealla napilla, niin koordinaatit näkyvät valikon ylimpänä. Kopioi ne ja vaihda pilkun jälkeinen välilyönti pois. |
+| `warningAreas` | Säävaroitusten alueet **pienillä kirjaimilla**: oma kunta ja maakunta, esim. `['äänekoski', 'keski-suomi']`. |
+| `radarUrl` | Linkki Ilmatieteen laitoksen sadetutkaan. Avaa ilmatieteenlaitos.fi → Sade- ja pilvialueet, valitse oma alueesi ja kopioi selaimen osoiterivi tähän. |
+
+Paina lopuksi **Commit changes**.
+
+Vaihda vielä nimi tiedostoihin **`public/manifest.json`** (kentät `name`, `short_name` ja `description`) ja **`public/index.html`** (rivit `<title>` ja `<meta name="description">`). Nämä näkyvät, kun sovellus lisätään puhelimen aloitusnäytölle tai jaetaan linkkinä.
+
+### 3. Julkaise sovellus
+1. Avaa omassa repossasi **Settings → Pages** ja valitse kohdassa **Source** vaihtoehto **GitHub Actions**.
+2. Avaa **Actions**-välilehti, valitse vasemmalta **Deploy to GitHub Pages** ja paina **Run workflow**. Jos listalla näkyy aiempi punainen ✗ -ajo, siitä ei tarvitse välittää: se käynnistyi ennen kuin Pages oli päällä.
+3. Kun ajo näyttää vihreää ✓, sovelluksesi on osoitteessa `https://<käyttäjätunnuksesi>.github.io/<repon-nimi>/`, esim. `https://jaska.github.io/aanekoskensaa/`.
+
+Valmista. Jokainen tämän jälkeen tekemäsi muutos julkaistaan automaattisesti noin minuutissa.
+
+*Fork-nappikin toimii. Forkatussa repossa pitää kuitenkin ensin sallia workflowt Actions-välilehdeltä painamalla* **I understand my workflows, go ahead and enable them**.
+
+### Jos jokin ei toimi
+- **Punainen virheilmoitus säätiedoista:** tarkista `place` ja `latlon`. Koordinaateissa erottimena on piste ja lukujen välissä pilkku ilman välilyöntiä.
+- **Varoituspalkissa lukee vain "Säävaroitukset Ilmatieteen laitokselta":** varoitukset haetaan puolen tunnin välein, joten odota hetki. Tarkista Actions-välilehdeltä, että ajot ovat vihreitä.
+- **Muutos ei näy:** paina sivulla Ctrl+Shift+R. Jos muutat `style.css`- tai `app.js`-tiedostoa, kasvata `index.html`-tiedostossa niiden perässä olevaa numeroa (`?v=4` → `?v=5`), niin selaimet hakevat uuden version.
 
 ---
 
-## 💡 Engineering Culture & Methodology
+## Data
+Kaikki säätiedot tulevat **Ilmatieteen laitoksen avoimesta datasta** (CC BY 4.0):
+- Ennuste: Ilmatieteen laitoksen virallinen, meteorologin muokkaama ennuste (`fmi::forecast::edited::weather::scandinavia::point::simple`). Varalla HARMONIE-malli.
+- Sää nyt: lähimmän sääaseman havainto (`fmi::observations::weather::simple`). Jos havaintoa ei saada, näytetään ennusteen ensimmäinen tunti.
+- Säävaroitukset: Ilmatieteen laitoksen CAP-varoitussyöte (`alerts.fmi.fi`). Syöte ei salli suoraa hakua selaimesta, joten julkaisu-workflow hakee sen puolen tunnin välein tiedostoksi `warnings.xml` ja julkaisee sivun uudelleen. Näytetään varoitukset, joiden alue on asetuksissa annettu kunta tai maakunta tai joiden alueeseen paikkakunnan koordinaatit osuvat. GitHub pysäyttää ajastetut ajot, jos repoon ei ole tehty muutoksia 60 päivään. Ajastuksen saa takaisin päälle Actions-välilehdeltä.
+- Sadetutka: linkit Ilmatieteen laitoksen tutkaan ja Sataako.fi:hin. Ilmatieteen laitoksen WMS-karttapalvelua ei saa käyttää suoraan sovelluksissa, joten tutkakuvaa ei upoteta sivulle.
 
-Built with strong team spirit and shared responsibility:
+Tiedot päivittyvät 15 minuutin välein ja aina, kun sivulle palataan. Yöllä sääkuvakkeissa näkyy kuu. Yö lasketaan auringon asemasta paikkakunnan koordinaateissa, joten se toimii myös kaamoksessa ja yöttömän yön aikaan.
 
-- **Cross-Read Documentation:** Core deployment plans are version-controlled, living documents requiring team alignment
-- **Automated Health Validation:** Built-in validation scripts (`health-check.sh`) ensuring deterministic deployments from dev to production
-- **AI-Assisted Development:** Blueprint developed with GitHub Copilot assistance, demonstrating practical AI tooling in infrastructure work
+Ulkoasu, kuvakkeet ja nimi ovat omia. Sovellus ei käytä muiden sääpalveluiden sisältöä tai tuotemerkkejä.
 
----
+## Teema
+Sovellus seuraa laitteen tummaa tai vaaleaa asetusta. Kuu- tai aurinkonapista teeman voi vaihtaa itse, ja valinta muistetaan.
 
-## 📬 Contact & Availability
+## Puhelimeen
+Avaa sivu puhelimen selaimessa ja valitse **Lisää aloitusnäytölle**. Sovellus aukeaa silloin kuin tavallinen sovellus.
 
-Interested in the full implementation or a walkthrough of the architecture?
-
-**Tomi Liimatainen**
-Senior Infrastructure & SRE Specialist | Helsinki Metropolitan Area
-[LinkedIn](https://www.linkedin.com/in/liimatainen-tomi/) | Available for interviews and technical deep-dives
-
+Lisenssi: MIT, katso LICENSE.
