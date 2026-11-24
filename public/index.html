@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tomppa – Riksun Sää</title>
+<meta name="description" content="Tomppa – Riksun Sää: Riihimäen sää ja ennuste Ilmatieteen laitoksen avoimesta datasta.">
+<meta name="theme-color" content="#EEF3F8">
+<link rel="manifest" href="./manifest.json">
+<link rel="icon" href="./icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="./icon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<div class="app">
+
+  <header class="top">
+    <div>
+      <h1 class="logo">Tomppa – Riksun <span>Sää</span></h1>
+      <p class="sub"><span id="place">Riihimäki</span> · <span id="updated">haetaan…</span></p>
+    </div>
+    <button id="refresh" class="iconbtn" type="button" aria-label="Päivitä sää">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 4v5h-5"/></svg>
+    </button>
+  </header>
+
+  <p id="error" class="error" role="alert" hidden></p>
+
+  <a class="warnlink" href="https://www.ilmatieteenlaitos.fi/varoitukset" target="_blank" rel="noopener">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l10 18H2z"/><path d="M12 10v5"/><path d="M12 18h.01"/></svg>
+    Säävaroitukset Ilmatieteen laitokselta
+  </a>
+
+  <div class="grid">
+    <div class="col">
+      <section class="card now" aria-label="Sää nyt">
+        <div class="nowtop">
+          <div>
+            <p class="label">Nyt</p>
+            <p id="nowTemp" class="bigtemp">–</p>
+            <p id="nowDesc" class="desc">&nbsp;</p>
+            <p id="nowFeels" class="muted">&nbsp;</p>
+          </div>
+          <div id="nowIcon" class="nowicon"></div>
+        </div>
+        <div class="tiles">
+          <div class="tile">
+            <p class="tl">Tuuli</p>
+            <p class="tv"><span id="windArrow" class="arrow"></span><span id="wind">–</span></p>
+            <p id="windDir" class="ts"></p>
+          </div>
+          <div class="tile">
+            <p class="tl">Sade 1 h</p>
+            <p id="rain" class="tv">–</p>
+          </div>
+          <div class="tile">
+            <p class="tl">Kosteus</p>
+            <p id="hum" class="tv">–</p>
+          </div>
+          <div class="tile">
+            <p class="tl">Ilmanpaine</p>
+            <p id="pres" class="tv">–</p>
+          </div>
+        </div>
+        <p id="nowSource" class="muted small"></p>
+      </section>
+
+      <section class="card" aria-label="Tuntiennuste">
+        <div class="cardhead">
+          <h2>Seuraavat 24 tuntia</h2>
+          <span class="muted small">vieritä →</span>
+        </div>
+        <div class="hscroll">
+          <div id="hourly" class="hourly"></div>
+        </div>
+        <p class="muted small pad">Pylväät: sademäärä mm/h</p>
+      </section>
+    </div>
+
+    <div class="col">
+      <section class="card" aria-label="10 vuorokauden ennuste">
+        <div class="cardhead"><h2>10 vuorokautta</h2></div>
+        <div id="daily" class="daily"></div>
+      </section>
+    </div>
+  </div>
+
+  <footer class="foot">
+    <p>Lähde: <a href="https://www.ilmatieteenlaitos.fi/avoin-data" target="_blank" rel="noopener">Ilmatieteen laitos, avoin data</a> (CC BY 4.0)</p>
+  </footer>
+</div>
+<script src="./app.js"></script>
+</body>
+</html>

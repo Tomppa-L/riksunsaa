@@ -1,0 +1,71 @@
+:root{
+  --bg:#EEF3F8; --card:#FFFFFF; --ink:#0F1E2E; --muted:#4A5B6D; --line:#E3EAF1;
+  --tile:#F3F7FB; --accent:#1E6FD9; --rain:#5B9BD5; --warm:#E08A3C;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;font-variant-numeric:tabular-nums}
+p,h1,h2{margin:0}
+a{color:#1E5A8C}a:hover{color:#123E63}
+.app{max-width:1000px;margin:0 auto;padding:20px 16px 28px;display:flex;flex-direction:column;gap:16px}
+
+.top{display:flex;justify-content:space-between;align-items:center;padding:4px 4px 0}
+.logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:26px;letter-spacing:-.5px}
+.logo span{color:var(--accent)}
+.sub{font-size:14px;color:var(--muted);margin-top:2px}
+.iconbtn{width:44px;height:44px;border-radius:22px;border:1px solid #C9D5E1;background:#fff;color:#1E3A55;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;flex:none}
+.iconbtn:hover{background:#F3F7FB}
+.iconbtn.spin svg{animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.error{background:#FDE8E8;border:1px solid #F0B4B4;color:#7A1F1F;border-radius:14px;padding:12px 14px;font-size:14px}
+.warnlink{display:flex;gap:10px;align-items:center;background:#FFF4CC;border:1px solid #E9CF6A;border-radius:14px;padding:12px 14px;color:#4D3900;font-size:14px;font-weight:600;text-decoration:none}
+.warnlink:hover{color:#2E2200;background:#FFEFB3}
+
+.grid{display:grid;grid-template-columns:minmax(0,1fr);gap:16px}
+@media (min-width:900px){.grid{grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);align-items:start}}
+.col{display:flex;flex-direction:column;gap:16px;min-width:0}
+
+.card{background:var(--card);border-radius:22px;padding:18px 20px;box-shadow:0 1px 2px rgba(15,30,46,.06);display:flex;flex-direction:column;gap:12px;min-width:0}
+.cardhead{display:flex;justify-content:space-between;align-items:baseline}
+.card h2{font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:600}
+.muted{color:var(--muted);font-size:14px}
+.small{font-size:12px}
+
+.now{gap:18px}
+.nowtop{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.label{font-size:13px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:var(--muted)}
+.bigtemp{font-family:'Space Grotesk',sans-serif;font-size:72px;line-height:1;font-weight:600;margin:4px 0}
+.desc{font-size:15px}
+.nowicon svg{width:96px;height:96px}
+.tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.tile{background:var(--tile);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:4px}
+.tl{font-size:12px;color:var(--muted)}
+.tv{font-size:17px;font-weight:600;display:flex;align-items:center;gap:6px}
+.ts{font-size:12px;color:var(--muted)}
+.arrow{display:inline-flex}
+
+.hscroll{overflow-x:auto;margin:0 -8px;padding:0 8px 4px}
+.hourly{display:flex;flex-direction:column;gap:4px}
+.hrow{display:flex}
+.hcell{width:56px;flex:none;display:flex;flex-direction:column;align-items:center;gap:6px}
+.htime{font-size:12px;color:var(--muted)}
+.htemp{font-size:15px;font-weight:600}
+.hcell svg{width:26px;height:26px}
+.prow{display:flex;align-items:flex-end;height:58px}
+.pcell{width:56px;flex:none;height:58px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:3px}
+.pbar{width:22px;border-radius:4px 4px 1px 1px;background:var(--line)}
+.pbar.wet{background:var(--rain)}
+.pval{font-size:11px;color:var(--muted);min-height:13px}
+.pad{padding:0}
+
+.daily{display:flex;flex-direction:column}
+.drow{display:grid;grid-template-columns:72px 30px 38px minmax(0,1fr) 38px 52px;align-items:center;gap:8px;height:56px;border-top:1px solid var(--line)}
+.dday{font-size:14px;font-weight:600}
+.dicon svg{width:26px;height:26px;display:block}
+.dmin{font-size:14px;color:var(--muted);text-align:right}
+.dmax{font-size:14px;font-weight:600}
+.dprec{font-size:12px;color:var(--muted);text-align:right}
+.track{position:relative;height:6px;border-radius:3px;background:var(--line)}
+.range{position:absolute;top:0;height:6px;border-radius:3px}
+
+.foot{font-size:12px;color:var(--muted);padding:4px 6px}
