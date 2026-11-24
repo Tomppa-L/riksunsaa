@@ -6,7 +6,7 @@ Riihimäen sää selaimessa: sää nyt, säävaroitukset, 24 tunnin tuntiennuste
 Kaikki säätiedot tulevat **Ilmatieteen laitoksen avoimesta datasta** (CC BY 4.0), suoraan selaimesta:
 - Ennuste: Ilmatieteen laitoksen virallinen, meteorologin muokkaama ennuste (`fmi::forecast::edited::weather::scandinavia::point::simple`). Varalla HARMONIE-malli.
 - Sää nyt: lähimmän sääaseman havainto (`fmi::observations::weather::simple`). Jos havaintoa ei saada, näytetään ennusteen ensimmäinen tunti.
-- Säävaroitukset: Ilmatieteen laitoksen CAP-varoitussyöte (`alerts.fmi.fi`). Näytetään varoitukset, joiden alue on Kanta-Häme tai Riihimäki tai joiden alueeseen Riihimäen koordinaatit osuvat. Väri (keltainen, oranssi, punainen) varoituksen tason mukaan.
+- Säävaroitukset: Ilmatieteen laitoksen CAP-varoitussyöte (`alerts.fmi.fi`). Syöte ei salli suoraa hakua selaimesta, joten julkaisu-workflow hakee sen puolen tunnin välein tiedostoksi `warnings.xml` ja julkaisee sivun uudelleen. Huom: GitHub poistaa ajastetut ajot käytöstä, jos repoon ei ole tehty muutoksia 60 päivään; ne saa takaisin päälle Actions-välilehdeltä. Näytetään varoitukset, joiden alue on Kanta-Häme tai Riihimäki tai joiden alueeseen Riihimäen koordinaatit osuvat. Väri (keltainen, oranssi, punainen) varoituksen tason mukaan.
 - Sadetutka: linkit Ilmatieteen laitoksen tutkaan ja Sataako.fi:hin. Ilmatieteen laitoksen WMS-karttapalvelua ei saa käyttää suoraan sovelluksissa, joten tutkakuvaa ei upoteta sivulle.
 
 ## Teema

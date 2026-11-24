@@ -219,7 +219,9 @@ function renderDaily(fc) {
 }
 
 // ---------- säävaroitukset (Ilmatieteen laitoksen CAP-syöte) ----------
-const CAP_FEED = 'https://alerts.fmi.fi/cap/feed/atom_fi-FI.xml';
+// Ilmatieteen laitoksen varoitussyöte ei salli suoraa hakua selaimesta (CORS),
+// joten GitHub Actions hakee sen puolen tunnin välein sivuston omaksi tiedostoksi.
+const CAP_FEEDS = ['./warnings.xml', 'https://alerts.fmi.fi/cap/feed/atom_fi-FI.xml'];
 const CAP_NS = 'urn:oasis:names:tc:emergency:cap:1.2';
 const [LAT, LON] = LATLON.split(',').map(Number);
 const AREA_WORDS = ['riihimäki', 'kanta-häme'];
@@ -235,10 +237,20 @@ function pointInPolygon(lat, lon, polyText) {
   return inside;
 }
 
+async function fetchFeed() {
+  for (const url of CAP_FEEDS) {
+    try {
+      const res = await fetch(url, { cache: 'no-store' });
+      if (!res.ok) continue;
+      const doc = new DOMParser().parseFromString(await res.text(), 'application/xml');
+      if (!doc.getElementsByTagName('parsererror').length && doc.documentElement.localName === 'feed') return doc;
+    } catch (e) { /* kokeillaan seuraavaa */ }
+  }
+  throw new Error('Varoituksia ei saatu');
+}
+
 async function getWarnings() {
-  const res = await fetch(CAP_FEED, { cache: 'no-store' });
-  if (!res.ok) throw new Error('HTTP ' + res.status);
-  const doc = new DOMParser().parseFromString(await res.text(), 'application/xml');
+  const doc = await fetchFeed();
   const now = new Date();
   const seen = new Set();
   const out = [];

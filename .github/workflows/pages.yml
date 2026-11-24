@@ -3,6 +3,9 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  schedule:
+    # Säävaroitukset päivitetään puolen tunnin välein (aika UTC).
+    - cron: '7,37 * * * *'
 permissions:
   contents: read
   pages: write
@@ -18,6 +21,10 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+      - name: Hae säävaroitukset Ilmatieteen laitokselta
+        run: |
+          curl -fsSL --retry 3 --max-time 60 https://alerts.fmi.fi/cap/feed/atom_fi-FI.xml -o public/warnings.xml \
+            || echo "Varoitussyötettä ei saatu, sivu julkaistaan ilman sitä"
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
